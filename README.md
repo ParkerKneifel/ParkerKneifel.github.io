@@ -152,7 +152,6 @@
             lastSubmissionTime = new Date();
             startCountdown();
             updateGraph();
-            alert('Investments submitted successfully!');
         };
 
         const canSubmit = () => {
@@ -183,11 +182,19 @@
 
         let allLabels = constantData2024.map(item => item.label);
         let allData = constantData2024.map(item => item.values);
+        let currentYear = 2025;
+        let currentMonth = 1;
 
         const updateGraph = () => {
             const lastData = allData[allData.length - 1];
 
-            const newLabel = `2025-${(allLabels.length % 12 + 1).toString().padStart(2, '0')}`;
+            if (currentMonth > 12) {
+                currentMonth = 1;
+                currentYear++;
+            }
+            const newLabel = `${currentYear}-${currentMonth.toString().padStart(2, '0')}`;
+            currentMonth++;
+
             allLabels.push(newLabel);
 
             const newData = lastData.map(generateRandomReturn);
@@ -207,35 +214,35 @@
         };
 
         const data = {
-            labels: allLabels,
+            labels: allLabels.slice(-12),
             datasets: [
                 {
                     label: 'Portfolio 1',
-                    data: allData.map(data => data[0]),
+                    data: allData.map(data => data[0]).slice(-12),
                     borderColor: 'red',
                     fill: false
                 },
                 {
                     label: 'Portfolio 2',
-                    data: allData.map(data => data[1]),
+                    data: allData.map(data => data[1]).slice(-12),
                     borderColor: 'blue',
                     fill: false
                 },
                 {
                     label: 'Portfolio 3',
-                    data: allData.map(data => data[2]),
+                    data: allData.map(data => data[2]).slice(-12),
                     borderColor: 'green',
                     fill: false
                 },
                 {
                     label: 'Portfolio 4',
-                    data: allData.map(data => data[3]),
+                    data: allData.map(data => data[3]).slice(-12),
                     borderColor: 'orange',
                     fill: false
                 },
                 {
                     label: 'Portfolio 5',
-                    data: allData.map(data => data[4]),
+                    data: allData.map(data => data[4]).slice(-12),
                     borderColor: 'purple',
                     fill: false
                 }
