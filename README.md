@@ -14,7 +14,7 @@
 
     <main>
         <section id="graph">
-            <h2>1-Year Historical Returns Updated</h2>
+            <h2>1-Year Historical Returns</h2>
             <canvas id="portfolioChart" width="400" height="200"></canvas>
         </section>
 
@@ -56,22 +56,19 @@
                 </div>
                 <button type="button" id="submitButton" onclick="submitInvestments()">Submit</button>
             </div>
-            <p id="timer" style="color: red; display: none;">You must wait 5 minutes before submitting again.</p>
+            <p id="timer" style="color: red; display: none;">You must wait 20 seconds before submitting again.</p>
             <p id="countdown" style="font-weight: bold; display: none;"></p>
         </section>
 
         <section id="portfolio-summary">
             <h2>Your Portfolio Summary</h2>
-            <table id="portfolioTable" border="1">
-                <thead>
-                    <tr>
-                        <th>Portfolio</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <div id="portfolioSummary">
+                <p>Portfolio 1: <span id="summaryPortfolio1">0</span></p>
+                <p>Portfolio 2: <span id="summaryPortfolio2">0</span></p>
+                <p>Portfolio 3: <span id="summaryPortfolio3">0</span></p>
+                <p>Portfolio 4: <span id="summaryPortfolio4">0</span></p>
+                <p>Portfolio 5: <span id="summaryPortfolio5">0</span></p>
+            </div>
         </section>
     </main>
 
@@ -105,12 +102,12 @@
 
         const startCountdown = () => {
             const countdownElement = document.getElementById('countdown');
-            let timeLeft = 300;
+            let timeLeft = 20;
 
             countdownElement.style.display = 'block';
             countdownInterval = setInterval(() => {
                 timeLeft -= 1;
-                countdownElement.textContent = `Time left: ${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')}`;
+                countdownElement.textContent = `Time left: ${timeLeft}s`;
 
                 if (timeLeft <= 0) {
                     clearInterval(countdownInterval);
@@ -133,23 +130,14 @@
                 return;
             }
 
-            const tableBody = document.getElementById('portfolioTable').querySelector('tbody');
-            const row = document.createElement('tr');
-
             Object.keys(investments).forEach(portfolio => {
-                const cell = document.createElement('td');
-                cell.textContent = portfolio;
-                row.appendChild(cell);
-
-                const amountCell = document.createElement('td');
-                amountCell.textContent = investments[portfolio];
-                row.appendChild(amountCell);
+                const summaryElement = document.getElementById(`summary${portfolio.charAt(0).toUpperCase() + portfolio.slice(1)}`);
+                summaryElement.textContent = investments[portfolio];
             });
-
-            tableBody.appendChild(row);
 
             lastSubmissionTime = new Date();
             startCountdown();
+            updateGraph();
             alert('Investments submitted successfully!');
         };
 
@@ -157,7 +145,19 @@
             if (!lastSubmissionTime) return true;
             const now = new Date();
             const diff = Math.floor((now - lastSubmissionTime) / 1000);
-            return diff >= 300;
+            return diff >= 20;
+        };
+
+        const updateGraph = () => {
+            data.labels.push(`Month ${data.labels.length + 1}`);
+            data.labels = data.labels.slice(-12);
+
+            data.datasets.forEach(dataset => {
+                dataset.data.push(Math.floor(Math.random() * 10 + 5)); // Random new return
+                dataset.data = dataset.data.slice(-12);
+            });
+
+            portfolioChart.update();
         };
 
         const data = {
@@ -224,7 +224,7 @@
         };
 
         const ctx = document.getElementById('portfolioChart').getContext('2d');
-        new Chart(ctx, config);
+        const portfolioChart = new Chart(ctx, config);
     </script>
 </body>
 </html>
