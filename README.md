@@ -112,6 +112,8 @@
             let timeLeft = 5;
 
             countdownElement.style.display = 'block';
+            countdownElement.textContent = `Time left: ${timeLeft}s`;
+
             countdownInterval = setInterval(() => {
                 timeLeft -= 1;
                 countdownElement.textContent = `Time left: ${timeLeft}s`;
@@ -140,8 +142,9 @@
             Object.keys(investments).forEach(portfolio => {
                 const investment = investments[portfolio];
                 const portfolioIndex = parseInt(portfolio.replace('portfolio', '')) - 1;
-                const lastReturn = allData[allData.length - 1][portfolioIndex];
-                totalInvestments[portfolio] = (totalInvestments[portfolio] + investment) * (1 + lastReturn / 100);
+                const lastReturn = allData[allData.length - 1][portfolioIndex] / 100;
+                totalInvestments[portfolio] *= (1 + lastReturn);
+                totalInvestments[portfolio] += investment;
                 document.getElementById(`summary${portfolio.charAt(0).toUpperCase() + portfolio.slice(1)}`).textContent = totalInvestments[portfolio].toFixed(2);
                 investments[portfolio] = 0;
                 document.getElementById(`${portfolio}Amount`).textContent = 0;
