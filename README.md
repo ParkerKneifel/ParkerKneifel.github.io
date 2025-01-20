@@ -14,7 +14,7 @@
 
     <main>
         <section id="graph">
-            <h2>1-Year Historical Returns</h2>
+            <h2>1-Year Historical Returns Updated</h2>
             <canvas id="portfolioChart" width="400" height="200"></canvas>
         </section>
 
@@ -56,7 +56,7 @@
                 </div>
                 <button type="button" id="submitButton" onclick="submitInvestments()">Submit</button>
             </div>
-            <p id="timer" style="color: red; display: none;">You must wait 20 seconds before submitting again.</p>
+            <p id="timer" style="color: red; display: none;">You must wait 5 seconds before submitting again.</p>
             <p id="countdown" style="font-weight: bold; display: none;"></p>
         </section>
 
@@ -86,6 +86,13 @@
             portfolio4: 0,
             portfolio5: 0
         };
+        const totalInvestments = {
+            portfolio1: 0,
+            portfolio2: 0,
+            portfolio3: 0,
+            portfolio4: 0,
+            portfolio5: 0
+        };
 
         const updateInvestment = (portfolio, change) => {
             const newAmount = investments[portfolio] + change;
@@ -102,7 +109,7 @@
 
         const startCountdown = () => {
             const countdownElement = document.getElementById('countdown');
-            let timeLeft = 20;
+            let timeLeft = 5;
 
             countdownElement.style.display = 'block';
             countdownInterval = setInterval(() => {
@@ -131,9 +138,16 @@
             }
 
             Object.keys(investments).forEach(portfolio => {
-                const summaryElement = document.getElementById(`summary${portfolio.charAt(0).toUpperCase() + portfolio.slice(1)}`);
-                summaryElement.textContent = investments[portfolio];
+                totalInvestments[portfolio] += investments[portfolio];
+                document.getElementById(`summary${portfolio.charAt(0).toUpperCase() + portfolio.slice(1)}`).textContent = totalInvestments[portfolio];
             });
+
+            Object.keys(investments).forEach(portfolio => {
+                investments[portfolio] = 0;
+                document.getElementById(`${portfolio}Amount`).textContent = 0;
+            });
+
+            document.getElementById('totalInvestment').textContent = 0;
 
             lastSubmissionTime = new Date();
             startCountdown();
@@ -145,7 +159,7 @@
             if (!lastSubmissionTime) return true;
             const now = new Date();
             const diff = Math.floor((now - lastSubmissionTime) / 1000);
-            return diff >= 20;
+            return diff >= 5;
         };
 
         const updateGraph = () => {
