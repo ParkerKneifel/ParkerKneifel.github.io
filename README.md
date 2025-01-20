@@ -162,64 +162,80 @@
             return diff >= 5;
         };
 
-        const generateHistoricalReturnsData = () => {
-            let data = [Math.floor(Math.random() * 10 + 1)]; // Starting data point
-            for (let i = 1; i < 12; i++) {
-                let previousData = data[i - 1];
-                let nextData = previousData * (1 + Math.random() * 0.3); // Increase by 0% to 30%
-                data.push(nextData);
-            }
-            return data;
+        const generateRandomReturn = (previousData) => {
+            return previousData * (1 + Math.random() * 0.3);
         };
 
-        const generateXAxisLabels = () => {
-            let labels = [];
-            for (let i = 0; i < 12; i++) {
-                labels.push(`2024-${(i + 1).toString().padStart(2, '0')}`);
-            }
-            return labels;
-        };
+        const constantData2024 = [
+            { label: '2024-01', values: [10, 15, 20, 25, 30] },
+            { label: '2024-02', values: [11, 16, 21, 26, 31] },
+            { label: '2024-03', values: [12, 17, 22, 27, 32] },
+            { label: '2024-04', values: [13, 18, 23, 28, 33] },
+            { label: '2024-05', values: [14, 19, 24, 29, 34] },
+            { label: '2024-06', values: [15, 20, 25, 30, 35] },
+            { label: '2024-07', values: [16, 21, 26, 31, 36] },
+            { label: '2024-08', values: [17, 22, 27, 32, 37] },
+            { label: '2024-09', values: [18, 23, 28, 33, 38] },
+            { label: '2024-10', values: [19, 24, 29, 34, 39] },
+            { label: '2024-11', values: [20, 25, 30, 35, 40] },
+            { label: '2024-12', values: [21, 26, 31, 36, 41] },
+        ];
+
+        let allLabels = constantData2024.map(item => item.label);
+        let allData = constantData2024.map(item => item.values);
 
         const updateGraph = () => {
-            portfolioChart.data.labels = generateXAxisLabels();
+            const lastData = allData[allData.length - 1];
 
+            const newLabel = `2025-${(allLabels.length % 12 + 1).toString().padStart(2, '0')}`;
+            allLabels.push(newLabel);
+
+            const newData = lastData.map(generateRandomReturn);
+            allData.push(newData);
+
+            if (allLabels.length > 12) {
+                allLabels.shift();
+                allData.shift();
+            }
+
+            portfolioChart.data.labels = allLabels.slice(-12);
             portfolioChart.data.datasets.forEach((dataset, index) => {
-                dataset.data = generateHistoricalReturnsData();
+                dataset.data = allData.map(data => data[index]).slice(-12);
             });
 
             portfolioChart.update();
         };
 
         const data = {
-            labels: generateXAxisLabels(),
+            labels: allLabels,
             datasets: [
                 {
                     label: 'Portfolio 1',
-                    data: generateHistoricalReturnsData(),
+                    data: allData.map(data => data[0]),
                     borderColor: 'red',
                     fill: false
                 },
                 {
                     label: 'Portfolio 2',
-                    data: generateHistoricalReturnsData(),
+                    data: allData.map(data => data[1]),
                     borderColor: 'blue',
                     fill: false
                 },
                 {
                     label: 'Portfolio 3',
-                    data: generateHistoricalReturnsData(),
+                    data: allData.map(data => data[2]),
                     borderColor: 'green',
                     fill: false
                 },
                 {
                     label: 'Portfolio 4',
-                    data: generateHistoricalReturnsData(),
+                    data: allData.map(data => data[3]),
                     borderColor: 'orange',
                     fill: false
                 },
                 {
                     label: 'Portfolio 5',
-                    data: generateHistoricalReturnsData(),
+                    data: allData.map(data => data[4]),
                     borderColor: 'purple',
                     fill: false
                 }
