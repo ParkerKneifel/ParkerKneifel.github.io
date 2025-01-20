@@ -20,24 +20,42 @@
 
         <section id="investment-selection">
             <h2>Select Your Investment</h2>
-            <form id="investmentForm">
-                <label for="portfolio1">Portfolio 1: </label>
-                <input type="number" id="portfolio1" name="portfolio1" min="0" value="0"><br>
-
-                <label for="portfolio2">Portfolio 2: </label>
-                <input type="number" id="portfolio2" name="portfolio2" min="0" value="0"><br>
-
-                <label for="portfolio3">Portfolio 3: </label>
-                <input type="number" id="portfolio3" name="portfolio3" min="0" value="0"><br>
-
-                <label for="portfolio4">Portfolio 4: </label>
-                <input type="number" id="portfolio4" name="portfolio4" min="0" value="0"><br>
-
-                <label for="portfolio5">Portfolio 5: </label>
-                <input type="number" id="portfolio5" name="portfolio5" min="0" value="0"><br>
-
-                <button type="submit">Submit</button>
-            </form>
+            <div id="investmentForm">
+                <div>
+                    <label>Portfolio 1: </label>
+                    <button type="button" onclick="updateInvestment('portfolio1', 1)">+1</button>
+                    <button type="button" onclick="updateInvestment('portfolio1', -1)">-1</button>
+                    <span id="portfolio1Amount">0</span>
+                </div>
+                <div>
+                    <label>Portfolio 2: </label>
+                    <button type="button" onclick="updateInvestment('portfolio2', 1)">+1</button>
+                    <button type="button" onclick="updateInvestment('portfolio2', -1)">-1</button>
+                    <span id="portfolio2Amount">0</span>
+                </div>
+                <div>
+                    <label>Portfolio 3: </label>
+                    <button type="button" onclick="updateInvestment('portfolio3', 1)">+1</button>
+                    <button type="button" onclick="updateInvestment('portfolio3', -1)">-1</button>
+                    <span id="portfolio3Amount">0</span>
+                </div>
+                <div>
+                    <label>Portfolio 4: </label>
+                    <button type="button" onclick="updateInvestment('portfolio4', 1)">+1</button>
+                    <button type="button" onclick="updateInvestment('portfolio4', -1)">-1</button>
+                    <span id="portfolio4Amount">0</span>
+                </div>
+                <div>
+                    <label>Portfolio 5: </label>
+                    <button type="button" onclick="updateInvestment('portfolio5', 1)">+1</button>
+                    <button type="button" onclick="updateInvestment('portfolio5', -1)">-1</button>
+                    <span id="portfolio5Amount">0</span>
+                </div>
+                <div>
+                    <p>Total: <span id="totalInvestment">0</span>/5</p>
+                </div>
+                <button type="button" id="submitButton" onclick="submitInvestments()">Submit</button>
+            </div>
             <p id="timer" style="color: red; display: none;">You must wait 5 minutes before submitting again.</p>
             <p id="countdown" style="font-weight: bold; display: none;"></p>
         </section>
@@ -64,6 +82,83 @@
     <script>
         let lastSubmissionTime = null;
         let countdownInterval = null;
+        const investments = {
+            portfolio1: 0,
+            portfolio2: 0,
+            portfolio3: 0,
+            portfolio4: 0,
+            portfolio5: 0
+        };
+
+        const updateInvestment = (portfolio, change) => {
+            const newAmount = investments[portfolio] + change;
+            if (newAmount >= 0 && getTotalInvestment() + change <= 5) {
+                investments[portfolio] = newAmount;
+                document.getElementById(`${portfolio}Amount`).textContent = newAmount;
+                document.getElementById('totalInvestment').textContent = getTotalInvestment();
+            }
+        };
+
+        const getTotalInvestment = () => {
+            return Object.values(investments).reduce((sum, value) => sum + value, 0);
+        };
+
+        const startCountdown = () => {
+            const countdownElement = document.getElementById('countdown');
+            let timeLeft = 300;
+
+            countdownElement.style.display = 'block';
+            countdownInterval = setInterval(() => {
+                timeLeft -= 1;
+                countdownElement.textContent = `Time left: ${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.style.display = 'none';
+                }
+            }, 1000);
+        };
+
+        const submitInvestments = () => {
+            if (!canSubmit()) {
+                document.getElementById('timer').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('timer').style.display = 'none';
+
+            const total = getTotalInvestment();
+            if (total > 5) {
+                alert('Total investment cannot exceed 5 units.');
+                return;
+            }
+
+            const tableBody = document.getElementById('portfolioTable').querySelector('tbody');
+            const row = document.createElement('tr');
+
+            Object.keys(investments).forEach(portfolio => {
+                const cell = document.createElement('td');
+                cell.textContent = portfolio;
+                row.appendChild(cell);
+
+                const amountCell = document.createElement('td');
+                amountCell.textContent = investments[portfolio];
+                row.appendChild(amountCell);
+            });
+
+            tableBody.appendChild(row);
+
+            lastSubmissionTime = new Date();
+            startCountdown();
+            alert('Investments submitted successfully!');
+        };
+
+        const canSubmit = () => {
+            if (!lastSubmissionTime) return true;
+            const now = new Date();
+            const diff = Math.floor((now - lastSubmissionTime) / 1000);
+            return diff >= 300;
+        };
 
         const data = {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -130,83 +225,6 @@
 
         const ctx = document.getElementById('portfolioChart').getContext('2d');
         new Chart(ctx, config);
-
-        const database = [];
-
-        function canSubmit() {
-            if (!lastSubmissionTime) return true;
-            const now = new Date();
-            const diff = Math.floor((now - lastSubmissionTime) / 1000);
-            return diff >= 20;
-        }
-
-        function startCountdown() {
-            const countdownElement = document.getElementById('countdown');
-            let timeLeft = 20;
-
-            countdownElement.style.display = 'block';
-            countdownInterval = setInterval(() => {
-                timeLeft -= 1;
-                countdownElement.textContent = `Time left: ${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')}`;
-
-                if (timeLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    countdownElement.style.display = 'none';
-                }
-            }, 1000);
-        }
-
-        function updatePortfolioSummary(investments) {
-            const tableBody = document.getElementById('portfolioTable').querySelector('tbody');
-            const row = document.createElement('tr');
-
-            Object.keys(investments).forEach(portfolio => {
-                const cell = document.createElement('td');
-                cell.textContent = portfolio;
-                row.appendChild(cell);
-
-                const amountCell = document.createElement('td');
-                amountCell.textContent = investments[portfolio];
-                row.appendChild(amountCell);
-            });
-
-            tableBody.appendChild(row);
-        }
-
-        document.getElementById('investmentForm').addEventListener('submit', (event) => {
-            event.preventDefault();
-
-            if (!canSubmit()) {
-                document.getElementById('timer').style.display = 'block';
-                return;
-            }
-
-            document.getElementById('timer').style.display = 'none';
-
-            const formData = new FormData(event.target);
-            let totalInvestment = 0;
-            let investments = {};
-
-            formData.forEach((value, key) => {
-                const amount = parseFloat(value) || 0;
-                totalInvestment += amount;
-                investments[key] = amount;
-            });
-
-            if (totalInvestment > 5) {
-                alert('Total investment cannot exceed 5 units.');
-                return;
-            }
-
-            database.push(investments);
-            console.log('Current portfolio database:', database);
-            updatePortfolioSummary(investments);
-
-            lastSubmissionTime = new Date();
-            startCountdown();
-
-            alert('Investments submitted successfully!');
-        });
     </script>
 </body>
 </html>
