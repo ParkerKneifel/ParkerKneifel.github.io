@@ -14,7 +14,7 @@
 
     <main>
         <section id="graph">
-            <h2>1-Year Historical Returns</h2>
+            <h2>1-Year Historical Returns Updated</h2>
             <canvas id="portfolioChart" width="400" height="200"></canvas>
         </section>
 
