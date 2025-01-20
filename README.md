@@ -138,11 +138,9 @@
             }
 
             Object.keys(investments).forEach(portfolio => {
-                totalInvestments[portfolio] += investments[portfolio];
-                document.getElementById(`summary${portfolio.charAt(0).toUpperCase() + portfolio.slice(1)}`).textContent = totalInvestments[portfolio];
-            });
-
-            Object.keys(investments).forEach(portfolio => {
+                const investment = investments[portfolio];
+                totalInvestments[portfolio] += investment;
+                document.getElementById(`summary${portfolio.charAt(0).toUpperCase() + portfolio.slice(1)}`).textContent = totalInvestments[portfolio].toFixed(2);
                 investments[portfolio] = 0;
                 document.getElementById(`${portfolio}Amount`).textContent = 0;
             });
@@ -207,7 +205,7 @@
 
             portfolioChart.data.labels = allLabels.slice(-12);
             portfolioChart.data.datasets.forEach((dataset, index) => {
-                dataset.data = allData.map(data => data[index]).slice(-12);
+                dataset.data = allData.map(data => data[index] + totalInvestments[`portfolio${index + 1}`]).slice(-12);
             });
 
             portfolioChart.update();
@@ -218,31 +216,31 @@
             datasets: [
                 {
                     label: 'Portfolio 1',
-                    data: allData.map(data => data[0]).slice(-12),
+                    data: allData.map(data => data[0] + totalInvestments.portfolio1).slice(-12),
                     borderColor: 'red',
                     fill: false
                 },
                 {
                     label: 'Portfolio 2',
-                    data: allData.map(data => data[1]).slice(-12),
+                    data: allData.map(data => data[1] + totalInvestments.portfolio2).slice(-12),
                     borderColor: 'blue',
                     fill: false
                 },
                 {
                     label: 'Portfolio 3',
-                    data: allData.map(data => data[2]).slice(-12),
+                    data: allData.map(data => data[2] + totalInvestments.portfolio3).slice(-12),
                     borderColor: 'green',
                     fill: false
                 },
                 {
                     label: 'Portfolio 4',
-                    data: allData.map(data => data[3]).slice(-12),
+                    data: allData.map(data => data[3] + totalInvestments.portfolio4).slice(-12),
                     borderColor: 'orange',
                     fill: false
                 },
                 {
                     label: 'Portfolio 5',
-                    data: allData.map(data => data[4]).slice(-12),
+                    data: allData.map(data => data[4] + totalInvestments.portfolio5).slice(-12),
                     borderColor: 'purple',
                     fill: false
                 }
@@ -269,7 +267,7 @@
                     y: {
                         title: {
                             display: true,
-                            text: 'Return (%)'
+                            text: 'Total Value'
                         }
                     }
                 }
