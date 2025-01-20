@@ -1,217 +1,170 @@
-
-
-ChatGPT
-You said:
-code me some code for a github repository to create me a basic website to get me started
-ChatGPT said:
-ChatGPT
-Here’s a basic structure for a GitHub repository that will help you create a simple website. The website will use HTML, CSS, and JavaScript to display some content and style. You can customize this to add your own features.
-
-Let me create the initial structure:
-
-Basic Website Repo
-Files to Include in Your GitHub Repository
-1. index.html
-This is your main HTML file, already provided above. It contains the structure and content of your website.
-
-2. styles.css
-Create a styles.css file to style your website. Here's an example:
-
-css
-Copy
-Edit
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
-}
-
-header {
-    background: #333;
-    color: #fff;
-    padding: 1rem 0;
-    text-align: center;
-}
-
-header nav ul {
-    list-style: none;
-    padding: 0;
-}
-
-header nav ul li {
-    display: inline;
-    margin: 0 15px;
-}
-
-header nav ul li a {
-    color: #fff;
-    text-decoration: none;
-}
-
-main {
-    padding: 2rem;
-}
-
-footer {
-    background: #333;
-    color: #fff;
-    text-align: center;
-    padding: 1rem 0;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-}
-3. script.js
-Create a script.js file for any interactivity you want to add. Here’s a simple starter:
-
-javascript
-Copy
-Edit
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Website is loaded and ready!");
-});
-Instructions to Publish on GitHub Pages
-Create a Repository on GitHub:
-
-Go to GitHub and create a new repository.
-Name it something like my-basic-website.
-Upload Your Files:
-
-Upload the index.html, styles.css, and script.js files to your repository.
-Enable GitHub Pages:
-
-Go to the repository's Settings > Pages.
-Under "Source," select the branch containing your index.html file (usually main) and click "Save."
-Visit Your Site:
-
-GitHub will provide a URL (e.g., https://username.github.io/my-basic-website/) to access your website.
-Let me know if you want further assistance!
-
-
-
-
-
-
-You said:
-Asked ChatGPT
-
-cool
-ChatGPT said:
-ChatGPT
-Stopped editing
-
-
-
-
-
-You said:
-Asked ChatGPT
-
-Scrap all of that. Create me a basic landing page for an investment website showing a graph of historical 1 year return for 5 different portfolios of stocks and a section where you can select the amount of each portfolio you would like to buy
-ChatGPT said:
-ChatGPT
-Edited
-The landing page has been updated to include a graph showing the historical 1-year returns for five portfolios and a section where users can specify their desired investment amounts for each portfolio. Let me know if you need further adjustments!
-
-
-
-
-
-
-You said:
-Asked ChatGPT
-
-add a timer and a database to store your personal portfolio. when you hit submit, you need to wait 5 minutes before submitting again, and the total investments between the 5 portfolios should be limited to 5.
-ChatGPT said:
-ChatGPT
-Edited
-The landing page now includes a timer that enforces a 5-minute wait before resubmission, a total investment cap of 5 across all portfolios, and a mock database to store portfolio data. Let me know if additional adjustments are needed!
-
-
-
-
-
-
-You said:
-Asked ChatGPT
-
-add a visible timer that counts down from 5 to 0 after initial submission. add another table to show how many of each portfolio you have adding new ones after each submission. 
-ChatGPT said:
-ChatGPT
-Edited
-I’ve added a visible countdown timer that starts after a submission, showing the remaining wait time. Additionally, I included a portfolio summary table that updates dynamically with each submission. Let me know if you need further adjustments!
-
-
-
-
-
-
-
-
-
-
-
-ChatGPT can make mistakes. Check important info.
-?
-ChatGPT says: I’ve added a visible countdown timer that starts after a submission, showing the remaining wait time. Additionally, I included a portfolio summary table that updates dynamically with each submission. Let me know if you need further adjustments!
-
-Basic Website Repo
-
-
-
-
-
-
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197
-198
-199
-200
-201
-202
-203
-204
-205
-206
-207
-208
-209
-210
-211
-212
-213
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Investment Portfolio Analysis</h1>
+    </header>
+
+    <main>
+        <section id="graph">
+            <h2>1-Year Historical Returns</h2>
+            <canvas id="portfolioChart" width="400" height="200"></canvas>
+        </section>
+
+        <section id="investment-selection">
+            <h2>Select Your Investment</h2>
+            <form id="investmentForm">
+                <label for="portfolio1">Portfolio 1: </label>
+                <input type="number" id="portfolio1" name="portfolio1" min="0" value="0"><br>
+
+                <label for="portfolio2">Portfolio 2: </label>
+                <input type="number" id="portfolio2" name="portfolio2" min="0" value="0"><br>
+
+                <label for="portfolio3">Portfolio 3: </label>
+                <input type="number" id="portfolio3" name="portfolio3" min="0" value="0"><br>
+
+                <label for="portfolio4">Portfolio 4: </label>
+                <input type="number" id="portfolio4" name="portfolio4" min="0" value="0"><br>
+
+                <label for="portfolio5">Portfolio 5: </label>
+                <input type="number" id="portfolio5" name="portfolio5" min="0" value="0"><br>
+
+                <button type="submit">Submit</button>
+            </form>
+            <p id="timer" style="color: red; display: none;">You must wait 5 minutes before submitting again.</p>
+            <p id="countdown" style="font-weight: bold; display: none;"></p>
+        </section>
+
+        <section id="portfolio-summary">
+            <h2>Your Portfolio Summary</h2>
+            <table id="portfolioTable" border="1">
+                <thead>
+                    <tr>
+                        <th>Portfolio</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Investment Analysis Inc. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let lastSubmissionTime = null;
+        let countdownInterval = null;
+
+        const data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [
+                {
+                    label: 'Portfolio 1',
+                    data: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+                    borderColor: 'red',
+                    fill: false
+                },
+                {
+                    label: 'Portfolio 2',
+                    data: [3, 4, 6, 7, 8, 10, 12, 13, 15, 16, 17, 18],
+                    borderColor: 'blue',
+                    fill: false
+                },
+                {
+                    label: 'Portfolio 3',
+                    data: [2, 3, 4, 6, 7, 8, 10, 11, 13, 14, 15, 16],
+                    borderColor: 'green',
+                    fill: false
+                },
+                {
+                    label: 'Portfolio 4',
+                    data: [1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                    borderColor: 'orange',
+                    fill: false
+                },
+                {
+                    label: 'Portfolio 5',
+                    data: [4, 5, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20],
+                    borderColor: 'purple',
+                    fill: false
+                }
+            ]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Return (%)'
+                        }
+                    }
+                }
+            },
+        };
+
+        const ctx = document.getElementById('portfolioChart').getContext('2d');
+        new Chart(ctx, config);
+
+        const database = [];
+
+        function canSubmit() {
+            if (!lastSubmissionTime) return true;
+            const now = new Date();
+            const diff = Math.floor((now - lastSubmissionTime) / 1000);
+            return diff >= 300;
+        }
+
+        function startCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            let timeLeft = 300;
+
+            countdownElement.style.display = 'block';
+            countdownInterval = setInterval(() => {
+                timeLeft -= 1;
+                countdownElement.textContent = `Time left: ${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        function updatePortfolioSummary(investments) {
+            const tableBody = document.getElementById('portfolioTable').querySelector('tbody');
+            const row = document.createElement('tr');
+
+            Object.keys(investments).forEach(portfolio => {
+                const cell = document.createElement('td');
+                cell.textContent = portfolio;
+                row.appendChild(cell);
+
                 const amountCell = document.createElement('td');
                 amountCell.textContent = investments[portfolio];
                 row.appendChild(amountCell);
@@ -257,4 +210,3 @@ Basic Website Repo
     </script>
 </body>
 </html>
-
