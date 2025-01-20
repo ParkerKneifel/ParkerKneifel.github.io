@@ -38,6 +38,7 @@
 
                 <button type="submit">Submit</button>
             </form>
+            <p id="timer" style="color: red; display: none;">You must wait 5 minutes before submitting again.</p>
         </section>
     </main>
 
@@ -46,7 +47,8 @@
     </footer>
 
     <script>
-        // Sample data for the chart
+        let lastSubmissionTime = null;
+
         const data = {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             datasets: [
@@ -110,19 +112,47 @@
             },
         };
 
-        // Render the chart
         const ctx = document.getElementById('portfolioChart').getContext('2d');
         new Chart(ctx, config);
 
-        // Handle form submission
+        const database = [];
+
+        function canSubmit() {
+            if (!lastSubmissionTime) return true;
+            const now = new Date();
+            const diff = Math.floor((now - lastSubmissionTime) / 1000);
+            return diff >= 300;
+        }
+
         document.getElementById('investmentForm').addEventListener('submit', (event) => {
             event.preventDefault();
+
+            if (!canSubmit()) {
+                document.getElementById('timer').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('timer').style.display = 'none';
+
             const formData = new FormData(event.target);
+            let totalInvestment = 0;
             let investments = {};
+
             formData.forEach((value, key) => {
-                investments[key] = parseFloat(value) || 0;
+                const amount = parseFloat(value) || 0;
+                totalInvestment += amount;
+                investments[key] = amount;
             });
-            console.log('Investments submitted:', investments);
+
+            if (totalInvestment > 5) {
+                alert('Total investment cannot exceed 5 units.');
+                return;
+            }
+
+            database.push(investments);
+            console.log('Current portfolio database:', database);
+
+            lastSubmissionTime = new Date();
             alert('Investments submitted successfully!');
         });
     </script>
