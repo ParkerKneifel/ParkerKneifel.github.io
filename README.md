@@ -63,11 +63,11 @@
         <section id="portfolio-summary">
             <h2>Your Portfolio Summary</h2>
             <div id="portfolioSummary">
-                <p>Portfolio 1: <span id="summaryPortfolio1">0</span></p>
-                <p>Portfolio 2: <span id="summaryPortfolio2">0</span></p>
-                <p>Portfolio 3: <span id="summaryPortfolio3">0</span></p>
-                <p>Portfolio 4: <span id="summaryPortfolio4">0</span></p>
-                <p>Portfolio 5: <span id="summaryPortfolio5">0</span></p>
+                <p>Portfolio 1: <span id="summaryPortfolio1">0.00</span></p>
+                <p>Portfolio 2: <span id="summaryPortfolio2">0.00</span></p>
+                <p>Portfolio 3: <span id="summaryPortfolio3">0.00</span></p>
+                <p>Portfolio 4: <span id="summaryPortfolio4">0.00</span></p>
+                <p>Portfolio 5: <span id="summaryPortfolio5">0.00</span></p>
             </div>
         </section>
     </main>
@@ -139,7 +139,9 @@
 
             Object.keys(investments).forEach(portfolio => {
                 const investment = investments[portfolio];
-                totalInvestments[portfolio] += investment;
+                const portfolioIndex = parseInt(portfolio.replace('portfolio', '')) - 1;
+                const lastReturn = allData[allData.length - 1][portfolioIndex];
+                totalInvestments[portfolio] = (totalInvestments[portfolio] + investment) * (1 + lastReturn / 100);
                 document.getElementById(`summary${portfolio.charAt(0).toUpperCase() + portfolio.slice(1)}`).textContent = totalInvestments[portfolio].toFixed(2);
                 investments[portfolio] = 0;
                 document.getElementById(`${portfolio}Amount`).textContent = 0;
@@ -206,6 +208,7 @@
             portfolioChart.data.labels = allLabels.slice(-12);
             portfolioChart.data.datasets.forEach((dataset, index) => {
                 dataset.data = allData.map(data => data[index] + totalInvestments[`portfolio${index + 1}`]).slice(-12);
+                dataset.label = `Portfolio ${index + 1} (${(newData[index] - lastData[index]).toFixed(2)}%)`; // Update label with % increase
             });
 
             portfolioChart.update();
