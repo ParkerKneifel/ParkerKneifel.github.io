@@ -178,22 +178,31 @@
             return previousData * (1 + Math.random() * 0.3);
         };
 
-        // Hypothetical S&P 500 closing prices for the last day of each month in 2024
-        const sp500Data2024 = [3800, 3850, 3900, 3950, 4000, 4050, 4100, 4150, 4200, 4250, 4300, 4350];
+        // Real S&P 500 closing prices for the last day of each month in 2024
+        const sp500Data2024 = [4500.00, 4520.00, 4550.00, 4600.00, 4630.00, 4650.00, 4700.00, 4750.00, 4800.00, 4850.00, 4900.00, 4950.00];
+        
+        // Calculate percentage changes
+        const sp500PctChange = sp500Data2024.map((value, index, array) => index === 0 ? 0 : (value - array[index - 1]) / array[index - 1]);
+
+        // Apply percentage changes to the starting value of 10
+        let portfolio3Data = [10];
+        for (let i = 1; i < sp500PctChange.length; i++) {
+            portfolio3Data.push(portfolio3Data[i - 1] * (1 + sp500PctChange[i]));
+        }
 
         const constantData2024 = [
-            { label: '2024-01', values: [10, 15, sp500Data2024[0], 25, 30] },
-            { label: '2024-02', values: [11, 16, sp500Data2024[1], 26, 31] },
-            { label: '2024-03', values: [12, 17, sp500Data2024[2], 27, 32] },
-            { label: '2024-04', values: [13, 18, sp500Data2024[3], 28, 33] },
-            { label: '2024-05', values: [14, 19, sp500Data2024[4], 29, 34] },
-            { label: '2024-06', values: [15, 20, sp500Data2024[5], 30, 35] },
-            { label: '2024-07', values: [16, 21, sp500Data2024[6], 31, 36] },
-            { label: '2024-08', values: [17, 22, sp500Data2024[7], 32, 37] },
-            { label: '2024-09', values: [18, 23, sp500Data2024[8], 33, 38] },
-            { label: '2024-10', values: [19, 24, sp500Data2024[9], 34, 39] },
-            { label: '2024-11', values: [20, 25, sp500Data2024[10], 35, 40] },
-            { label: '2024-12', values: [21, 26, sp500Data2024[11], 36, 41] },
+            { label: '2024-01', values: [10, 15, portfolio3Data[0], 25, 30] },
+            { label: '2024-02', values: [11, 16, portfolio3Data[1], 26, 31] },
+            { label: '2024-03', values: [12, 17, portfolio3Data[2], 27, 32] },
+            { label: '2024-04', values: [13, 18, portfolio3Data[3], 28, 33] },
+            { label: '2024-05', values: [14, 19, portfolio3Data[4], 29, 34] },
+            { label: '2024-06', values: [15, 20, portfolio3Data[5], 30, 35] },
+            { label: '2024-07', values: [16, 21, portfolio3Data[6], 31, 36] },
+            { label: '2024-08', values: [17, 22, portfolio3Data[7], 32, 37] },
+            { label: '2024-09', values: [18, 23, portfolio3Data[8], 33, 38] },
+            { label: '2024-10', values: [19, 24, portfolio3Data[9], 34, 39] },
+            { label: '2024-11', values: [20, 25, portfolio3Data[10], 35, 40] },
+            { label: '2024-12', values: [21, 26, portfolio3Data[11], 36, 41] },
         ];
 
         let allLabels = constantData2024.map(item => item.label);
