@@ -137,12 +137,12 @@
             if (!lastSubmissionTime) return true;
             const now = new Date();
             const diff = Math.floor((now - lastSubmissionTime) / 1000);
-            return diff >= 300;
+            return diff >= 20;
         }
 
         function startCountdown() {
             const countdownElement = document.getElementById('countdown');
-            let timeLeft = 300;
+            let timeLeft = 20;
 
             countdownElement.style.display = 'block';
             countdownInterval = setInterval(() => {
