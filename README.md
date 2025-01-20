@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,6 +20,11 @@
                 <button onclick="updateView('3-years')">3 Years</button>
             </div>
             <canvas id="portfolioChart" width="400" height="200"></canvas>
+        </section>
+
+        <section id="spy-graph">
+            <h2>SPY Monthly Data for 2024</h2>
+            <canvas id="spyChart" width="400" height="200"></canvas>
         </section>
 
         <section id="investment-selection">
@@ -328,6 +332,46 @@
 
         const ctx = document.getElementById('portfolioChart').getContext('2d');
         const portfolioChart = new Chart(ctx, config);
-    </script>
-</body>
-</html>
+
+        async function fetchSPYData() {
+            const response = await fetch('spy_2024_data.json');
+            const data = await response.json();
+            return data;
+        }
+
+        async function createSPYChart() {
+            const data = await fetchSPYData();
+            const ctx = document.getElementById('spyChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'SPY',
+                        data: data.values,
+                        borderColor: 'blue',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Month'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Price'
+                            }
+                        }
+                    }
