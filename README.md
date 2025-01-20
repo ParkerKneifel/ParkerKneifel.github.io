@@ -15,6 +15,11 @@
     <main>
         <section id="graph">
             <h2>1-Year Historical Returns</h2>
+            <div>
+                <button onclick="updateView('1-year')">1 Year</button>
+                <button onclick="updateView('6-months')">6 Months</button>
+                <button onclick="updateView('3-years')">3 Years</button>
+            </div>
             <canvas id="portfolioChart" width="400" height="200"></canvas>
         </section>
 
@@ -68,6 +73,7 @@
                 <p>Portfolio 3: <span id="summaryPortfolio3">0.00</span></p>
                 <p>Portfolio 4: <span id="summaryPortfolio4">0.00</span></p>
                 <p>Portfolio 5: <span id="summaryPortfolio5">0.00</span></p>
+                <p>Total Portfolio Value: <span id="totalPortfolioValue">0.00</span></p>
             </div>
         </section>
     </main>
@@ -152,6 +158,10 @@
 
             document.getElementById('totalInvestment').textContent = 0;
 
+            // Update total portfolio value
+            const totalPortfolioValue = Object.values(totalInvestments).reduce((sum, value) => sum + value, 0);
+            document.getElementById('totalPortfolioValue').textContent = totalPortfolioValue.toFixed(2);
+
             lastSubmissionTime = new Date();
             startCountdown();
             updateGraph();
@@ -203,15 +213,39 @@
             const newData = lastData.map(generateRandomReturn);
             allData.push(newData);
 
-            if (allLabels.length > 12) {
+            if (allLabels.length > 36) { // Keep track of 3 years of data
                 allLabels.shift();
                 allData.shift();
             }
 
-            portfolioChart.data.labels = allLabels.slice(-12);
+            updateView(currentView); // Update the graph based on the current view
+        };
+
+        let currentView = '1-year';
+
+        const updateView = (view) => {
+            currentView = view;
+            let labels, dataLength;
+            
+            switch (view) {
+                case '6-months':
+                    labels = allLabels.slice(-6);
+                    dataLength = 6;
+                    break;
+                case '3-years':
+                    labels = allLabels.slice(-36);
+                    dataLength = 36;
+                    break;
+                case '1-year':
+                default:
+                    labels = allLabels.slice(-12);
+                    dataLength = 12;
+            }
+
+            portfolioChart.data.labels = labels;
             portfolioChart.data.datasets.forEach((dataset, index) => {
-                dataset.data = allData.map(data => data[index] + totalInvestments[`portfolio${index + 1}`]).slice(-12);
-                dataset.label = `Portfolio ${index + 1} (${(newData[index] - lastData[index]).toFixed(2)}%)`; // Update label with % increase
+                dataset.data = allData.slice(-dataLength).map(data => data[index] + totalInvestments[`portfolio${index + 1}`]);
+                dataset.label = `Portfolio ${index + 1} (${(allData[allData.length - 1][index] - (allData[allData.length - 2] ? allData[allData.length - 2][index] : 0)).toFixed(2)}%)`; // Update label with % increase
             });
 
             portfolioChart.update();
@@ -222,31 +256,31 @@
             datasets: [
                 {
                     label: 'Portfolio 1',
-                    data: allData.map(data => data[0] + totalInvestments.portfolio1).slice(-12),
+                    data: allData.slice(-12).map(data => data[0] + totalInvestments.portfolio1),
                     borderColor: 'red',
                     fill: false
                 },
                 {
                     label: 'Portfolio 2',
-                    data: allData.map(data => data[1] + totalInvestments.portfolio2).slice(-12),
+                    data: allData.slice(-12).map(data => data[1] + totalInvestments.portfolio2),
                     borderColor: 'blue',
                     fill: false
                 },
                 {
                     label: 'Portfolio 3',
-                    data: allData.map(data => data[2] + totalInvestments.portfolio3).slice(-12),
+                    data: allData.slice(-12).map(data => data[2] + totalInvestments.portfolio3),
                     borderColor: 'green',
                     fill: false
                 },
                 {
                     label: 'Portfolio 4',
-                    data: allData.map(data => data[3] + totalInvestments.portfolio4).slice(-12),
+                    data: allData.slice(-12).map(data => data[3] + totalInvestments.portfolio4),
                     borderColor: 'orange',
                     fill: false
                 },
                 {
                     label: 'Portfolio 5',
-                    data: allData.map(data => data[4] + totalInvestments.portfolio5).slice(-12),
+                    data: allData.slice(-12).map(data => data[4] + totalInvestments.portfolio5),
                     borderColor: 'purple',
                     fill: false
                 }
