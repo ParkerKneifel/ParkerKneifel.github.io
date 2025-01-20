@@ -178,19 +178,22 @@
             return previousData * (1 + Math.random() * 0.3);
         };
 
+        // Hypothetical S&P 500 closing prices for the last day of each month in 2024
+        const sp500Data2024 = [3800, 3850, 3900, 3950, 4000, 4050, 4100, 4150, 4200, 4250, 4300, 4350];
+
         const constantData2024 = [
-            { label: '2024-01', values: [10, 15, 20, 25, 30] },
-            { label: '2024-02', values: [11, 16, 21, 26, 31] },
-            { label: '2024-03', values: [12, 17, 22, 27, 32] },
-            { label: '2024-04', values: [13, 18, 23, 28, 33] },
-            { label: '2024-05', values: [14, 19, 24, 29, 34] },
-            { label: '2024-06', values: [15, 20, 25, 30, 35] },
-            { label: '2024-07', values: [16, 21, 26, 31, 36] },
-            { label: '2024-08', values: [17, 22, 27, 32, 37] },
-            { label: '2024-09', values: [18, 23, 28, 33, 38] },
-            { label: '2024-10', values: [19, 24, 29, 34, 39] },
-            { label: '2024-11', values: [20, 25, 30, 35, 40] },
-            { label: '2024-12', values: [21, 26, 31, 36, 41] },
+            { label: '2024-01', values: [10, 15, sp500Data2024[0], 25, 30] },
+            { label: '2024-02', values: [11, 16, sp500Data2024[1], 26, 31] },
+            { label: '2024-03', values: [12, 17, sp500Data2024[2], 27, 32] },
+            { label: '2024-04', values: [13, 18, sp500Data2024[3], 28, 33] },
+            { label: '2024-05', values: [14, 19, sp500Data2024[4], 29, 34] },
+            { label: '2024-06', values: [15, 20, sp500Data2024[5], 30, 35] },
+            { label: '2024-07', values: [16, 21, sp500Data2024[6], 31, 36] },
+            { label: '2024-08', values: [17, 22, sp500Data2024[7], 32, 37] },
+            { label: '2024-09', values: [18, 23, sp500Data2024[8], 33, 38] },
+            { label: '2024-10', values: [19, 24, sp500Data2024[9], 34, 39] },
+            { label: '2024-11', values: [20, 25, sp500Data2024[10], 35, 40] },
+            { label: '2024-12', values: [21, 26, sp500Data2024[11], 36, 41] },
         ];
 
         let allLabels = constantData2024.map(item => item.label);
